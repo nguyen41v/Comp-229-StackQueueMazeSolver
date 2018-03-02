@@ -60,7 +60,7 @@ public class StackSolver
 		myStack.push( myC );
 
 		// FOR DEBUGGING: scanner for showing maze step by step
-		Scanner myScan = new Scanner( System.in );
+		// Scanner myScan = new Scanner( System.in );
 
 		// iteratively push surrounding spaces onto stack and move
 		// loop while top of stack is NOT the finish position in the maze
@@ -70,53 +70,61 @@ public class StackSolver
 			//break;
 
 			// FOR DEBUGGING: print maze, wait for user to go to next step
-			showMaze();
-			myScan.nextLine();
+			// showMaze();
+			// myScan.nextLine();
+			// System.out.print(row);
+			// System.out.println(col);
 
 			// WRITE YOUR CODE HERE, KEEP THIS ORDERING (UP, DOWN, LEFT, RIGHT)
-			boolean
-			while
-			if (myStack.peek().x > 0) {
-				if (stackmaze[myStack.peek().x - 1][myStack.peek().y] == 2 || stackmaze[myStack.peek().x - 1][myStack.peek().y] == 3) {
-					Coordinate tempC = new Coordinate(myStack.peek().x - 1, myStack.peek().y);
-					myStack.push(tempC);
-					if (stackmaze[tempC.x][tempC.y] != 3) {
-						stackmaze[tempC.x][tempC.y] = 0;
+			boolean checkingSquares = true;
+			while (checkingSquares) {
+				if (row > 0) { // explore up
+					if (stackmaze[row - 1][col] == 2 || stackmaze[row - 1][col] == 3) { // check if it can go up
+						Coordinate tempC = new Coordinate(row - 1, col);
+						myStack.push(tempC); // add to stack if it can go
+						if (stackmaze[tempC.x][tempC.y] != 3) { //update space as explored
+							stackmaze[tempC.x][tempC.y] = 0;
+						}
+						break;
 					}
 				}
-			}
-			else if (myStack.peek().x != dimension - 2) {
-				if (stackmaze[myStack.peek().x + 1][myStack.peek().y] == 2 || stackmaze[myStack.peek().x + 1][myStack.peek().y] == 3) {
-					Coordinate tempC = new Coordinate(myStack.peek().x + 1, myStack.peek().y);
-					myStack.push(tempC);
-					if (stackmaze[tempC.x][tempC.y] != 3) {
-						stackmaze[tempC.x][tempC.y] = 0;
+				if (row < dimension - 1) { // explore down
+					if (stackmaze[row + 1][col] == 2 || stackmaze[row + 1][col] == 3) { // check if it can go down
+						Coordinate tempC = new Coordinate(row + 1, col);
+						myStack.push(tempC); // add to stack if it can go
+						if (stackmaze[tempC.x][tempC.y] != 3) { // update space as explored
+							stackmaze[tempC.x][tempC.y] = 0;
+						}
+						break;
 					}
 				}
-			}
-			else if (myStack.peek().y != 0) {
-				if (stackmaze[myStack.peek().x][myStack.peek().y - 1] == 2 || stackmaze[myStack.peek().x][myStack.peek().y - 1] == 3) {
-					Coordinate tempC = new Coordinate(myStack.peek().x, myStack.peek().y - 1);
-					myStack.push(tempC);
-					if (stackmaze[tempC.x][tempC.y] != 3) {
-						stackmaze[tempC.x][tempC.y] = 0;
+				if (col > 0) { // explore left
+					if (stackmaze[row][col - 1] == 2 || stackmaze[row][col - 1] == 3) { // check if it can go left
+						Coordinate tempC = new Coordinate(row, col - 1);
+						myStack.push(tempC); // add to stack if it can go
+						if (stackmaze[tempC.x][tempC.y] != 3) { // update space as explored
+							stackmaze[tempC.x][tempC.y] = 0;
+						}
+						break;
 					}
 				}
-			}
-			else if (myStack.peek().y != dimension - 2) {
-				if (stackmaze[myStack.peek().x][myStack.peek().y + 1] == 2 || stackmaze[myStack.peek().x][myStack.peek().y + 1] == 3) {
-					Coordinate tempC = new Coordinate(myStack.peek().x + 1, myStack.peek().y + 1);
-					myStack.push(tempC);
-					if (stackmaze[tempC.x][tempC.y] != 3) {
-						stackmaze[tempC.x][tempC.y] = 0;
+				if (col < dimension - 1) { // explore right
+					if (stackmaze[row][col + 1] == 2 || stackmaze[row][col + 1] == 3) { // check if it can go right
+						Coordinate tempC = new Coordinate(row, col + 1);
+						myStack.push(tempC); // add to stack if it can go
+						if (stackmaze[tempC.x][tempC.y] != 3) { // update space as explored
+							stackmaze[tempC.x][tempC.y] = 0;
+						}
+						break;
 					}
 				}
+				myStack.pop(); // if there are no spaces it can go, pop and go back a space and check squares around there
+				row = myStack.peek().x;
+				col = myStack.peek().y;
 			}
-			else {
-				myStack.pop();
-			}
-			col = myStack.peek().y;
+
 			row = myStack.peek().x;
+			col = myStack.peek().y;
 			// explore up && make sure space is not explored before and not a wall
 				// if can explore, push onto stack
 				// remember to set explored spaces as 0 in maze (but leave finish as 3 in map)
@@ -142,7 +150,98 @@ public class StackSolver
 	}
 
 	// 10 pts extra credit, solve the maze recursively with a stack
-	//public void stackSolveRecursive(/* use whatever parameters you need */)
-	//{
-	//}
+	public void stackSolveRecursive() { // USE THIS ONE, defaults to starting position of 0, 0
+		stackSolveRecursive(0, 0);
+	}
+
+	public void stackSolveRecursive(int startx, int starty) { // OR THIS ONE, changeable starting position
+			Stack<Coordinate> myStack = new Stack<Coordinate>();
+			myStack.push(new Coordinate(startx, starty));
+			stackmaze[startx][starty] = 0;
+			stackSolveRecursive(myStack);
+		}
+	public void stackSolveRecursive(Stack<Coordinate> myStack) {
+		int row = myStack.peek().x;
+		int col = myStack.peek().y;
+		// FOR DEBUGGING: print maze, wait for user to go to next step
+		// Scanner myScan = new Scanner( System.in );
+		// showMaze();
+		// myScan.nextLine();
+		// System.out.println(row + " " + col);
+
+		if (stackmaze[row][col] == 3) { // base case
+			System.out.println( "Finished stack solver!" );
+			Stack<Coordinate> tempStack = new Stack<>();
+			while ( !myStack.isEmpty() ) {
+				Coordinate tempC = myStack.pop();
+				System.out.println( tempC.x + " " + tempC.y + " " );
+			}
+		}
+		else {
+			if (myStack.isEmpty()) { // stops checking once end is found + gets rid of error messages
+				return;
+			}
+			// System.out.println("checking: " + myStack.peek().x + " " + myStack.peek().y + " ");
+			if (row > 0) { // explore up
+				if (stackmaze[row - 1][col] == 2 || stackmaze[row - 1][col] == 3) { // check if it can go up
+					Coordinate tempC = new Coordinate(row - 1, col);
+					myStack.push(tempC); // add to stack if it can go
+					if (stackmaze[tempC.x][tempC.y] != 3) { // update space as explored
+						stackmaze[tempC.x][tempC.y] = 0;
+					}
+					stackSolveRecursive(myStack); // call function again
+				}
+			}
+			 if (myStack.isEmpty()) { // stops checking once end is found + gets rid of error messages
+				return;
+			 }
+			// System.out.println("checking: " + myStack.peek().x + " " + myStack.peek().y + " ");
+			if (row < dimension - 1) { // explore down
+				if (stackmaze[row + 1][col] == 2 || stackmaze[row + 1][col] == 3) { // check if it can go down
+					Coordinate tempC = new Coordinate(row + 1, col);
+					myStack.push(tempC); // add to stack if it can go
+					if (stackmaze[tempC.x][tempC.y] != 3) {
+						stackmaze[tempC.x][tempC.y] = 0;
+					}
+					stackSolveRecursive(myStack); // call function again
+
+				}
+			}
+			if (myStack.isEmpty()) { // stops checking once end is found + gets rid of error messages
+				return;
+			}
+			// System.out.println("checking: " + myStack.peek().x + " " + myStack.peek().y + " ");
+			if (col > 0) { // explore left
+				if (stackmaze[row][col - 1] == 2 || stackmaze[row][col - 1] == 3) { // check if it can go left
+					Coordinate tempC = new Coordinate(row, col - 1);
+					myStack.push(tempC); // add to stack if it can go
+					if (stackmaze[tempC.x][tempC.y] != 3) {
+						stackmaze[tempC.x][tempC.y] = 0;
+					}
+					stackSolveRecursive(myStack); // call function again
+					// System.out.println("recursion: " + stackmaze[row][col] + " ");
+				}
+			}
+			if (myStack.isEmpty()) { // stops checking once end is found + gets rid of error messages
+				return;
+			}
+			// System.out.println("checking: " + myStack.peek().x + " " + myStack.peek().y + " ");
+			if (col < dimension - 1) { //explore right
+				if (stackmaze[row][col + 1] == 2 || stackmaze[row][col + 1] == 3) { // check if it can go right
+					Coordinate tempC = new Coordinate(row, col + 1);
+					myStack.push(tempC); // add stack if it can go
+					if (stackmaze[tempC.x][tempC.y] != 3) {
+						stackmaze[tempC.x][tempC.y] = 0;
+					}
+					stackSolveRecursive(myStack); // call function again
+
+				}
+			}
+			if (myStack.isEmpty()) { // stops checking once end is found
+				return;
+			}
+			// System.out.println("recursion: " + stackmaze[row][col] + " " + row + col);
+			myStack.pop();
+		}
+	}
 }

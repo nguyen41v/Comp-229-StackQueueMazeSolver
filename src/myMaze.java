@@ -1,5 +1,7 @@
 // DO NOT MODIFY
 
+import java.util.LinkedList;
+
 public class myMaze
 {
 	// start at upper left corner (0, 0)
@@ -20,10 +22,12 @@ public class myMaze
 	{
 		StackSolver stSolve = new StackSolver ( maze );
 		stSolve.stackSolve();
-		//stSolve.stackSolveRecursive(/* use whatever parameters you need */);
+		StackSolver tSolve = new StackSolver ( maze );
+		tSolve.stackSolveRecursive(0, 0);
 
 		QueueSolver qSolve = new QueueSolver ( maze );
 		qSolve.queueSolve();
-		//qSolve.queueSolveRecursive(/* use whatever parameters you need */);
+		QueueSolver Solve = new QueueSolver ( maze );
+		Solve.queueSolveRecursive(0,0);
 	}
 }
